@@ -15,7 +15,11 @@ class LevelController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            'data' => [
+                'levels' => Level::all()->toArray()
+            ]
+        ]);
     }
 
     /**
@@ -36,7 +40,13 @@ class LevelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $inputs = $request->only(['label', 'connectedWith']);
+        Level::create($inputs);
+        return response()->json([
+            'data' => [
+                'levels' => Level::all()->toArray()
+            ]
+        ]);
     }
 
     /**
@@ -68,9 +78,16 @@ class LevelController extends Controller
      * @param  \App\Models\Level  $level
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Level $level)
+    public function update(Request $request, $id)
     {
-        //
+        $level = Level::findOrFail($id);
+        $inputs = $request->only(['label']);
+        $level->update($inputs);
+        return response()->json([
+            'data' => [
+                'levels' => Level::all()->toArray()
+            ]
+        ]);
     }
 
     /**
@@ -79,8 +96,14 @@ class LevelController extends Controller
      * @param  \App\Models\Level  $level
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Level $level)
+    public function destroy($id)
     {
-        //
+        $level = Level::findOrFail($id);
+        $level->delete();
+        return response()->json([
+            'data' => [
+                'levels' => Level::all()->toArray()
+            ]
+        ]);
     }
 }
