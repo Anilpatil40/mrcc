@@ -100,6 +100,7 @@ class LevelController extends Controller
     {
         $level = Level::findOrFail($id);
         $level->delete();
+        Level::where('connectedWith', $level->id)->delete();
         return response()->json([
             'data' => [
                 'levels' => Level::all()->toArray()

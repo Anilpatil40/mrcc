@@ -64,6 +64,11 @@
               ></i>
               `
             ) : ``) +
+            `<i 
+              style="cursor: pointer" 
+              class="bi bi-trash-fill delete-level-btn" 
+              data-level-id='${id}'
+              ></i>` +
           `</div>`
         );
       }, '')
@@ -79,6 +84,19 @@
           `<input id='input-add-level' class='w-100' data-connected-with='${connectedWith ? connectedWith : ""}' />`
         );
         toggleAddLevelModal();
+      });
+
+      $('.delete-level-btn').on('click', (e) => {
+        const id = $(e.target).data('level-id');
+
+        $.ajax({
+          type: 'POST',
+          url: `/api/levels/${id}/delete`,
+          success: (data) => {
+            renderLevelContainer(data.data.levels);
+          },
+          processData: false
+        })
       });
     }
 
