@@ -55,18 +55,18 @@
       const html = levels.reduce((html, {id, label, connectedWith}) => {
         return html + (
           `<div class='mt-1'>`+
-            `<div class='d-inline' style='margin-left: ${connectedWith ? 30 : 0}px'>${label}</div>` +
+            `<input class='level-input' style='margin-left: ${connectedWith ? 30 : 0}px' value='${label}' data-level-id='${id}' />` +
             (!connectedWith ? (
               `<i 
               style="cursor: pointer" 
-              class="bi bi-plus-circle open-add-modal-btn" 
+              class="bi bi-plus-circle open-add-modal-btn ms-2" 
               data-connected-with='${id}'
               ></i>
               `
             ) : ``) +
             `<i 
               style="cursor: pointer" 
-              class="bi bi-trash-fill delete-level-btn" 
+              class="bi bi-trash-fill delete-level-btn ms-2" 
               data-level-id='${id}'
               ></i>` +
           `</div>`
@@ -92,6 +92,24 @@
         $.ajax({
           type: 'POST',
           url: `/api/levels/${id}/delete`,
+          success: (data) => {
+            renderLevelContainer(data.data.levels);
+          },
+          processData: false
+        })
+      });
+
+      $('.level-input').on('keypress focusout', (e) => {
+        if(e.which != 0 && e.which != 13) return;
+        const id = $(e.target).data('level-id');
+        const label = $(e.target).val();
+
+        $.ajax({
+          type: 'POST',
+          url: `/api/levels/${id}/update`,
+          data: new URLSearchParams({
+            label,
+          }),
           success: (data) => {
             renderLevelContainer(data.data.levels);
           },
