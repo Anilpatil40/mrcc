@@ -49,6 +49,9 @@
 
     function renderLevelContainer(levels = []){
       levels.sort((levelA, levelB) => {
+        if(levelA.connectedWith < levelB.connectedWith ) return -1;
+      });
+      levels.sort((levelA, levelB) => {
         if(levelA.connectedWith == levelB.connectedWith) return 0;
         if(levelB.connectedWith == null && levelA.connectedWith < levelB.id ) return -1;
       });
